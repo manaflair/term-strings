@@ -1,0 +1,23 @@
+{
+  "name": "@manaflair/term-strings",
+  "version": "0.0.1",
+  "license": "MIT",
+  "bin": {
+    "term-strings": "./build/bin/term-strings.js"
+  },
+  "scripts": {
+    "demo": "babel-node -- sources/bin/term-strings -i front.red -r 'Red Text' -o front -r ' and ' -i front.green -r 'Green Text' -o front",
+    "build": "babel -D -d build/ sources/",
+    "prepublish": "npm run build"
+  },
+  "dependencies": {
+    "color-diff": "^1.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.16.0",
+    "babel-core": "^6.17.0",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-es2016": "^6.16.0",
+    "babel-preset-es2017": "^6.16.0"
+  }
+}
