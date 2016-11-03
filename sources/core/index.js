@@ -1,51 +1,51 @@
-import colorNames                                      from './colorNames';
-import { getColor, getColorReset, COLOR_FG, COLOR_BG } from './getColor';
+import { colorNames }                                  from './data/colorNames';
+import { getColor, getColorReset, COLOR_FG, COLOR_BG } from './tools/getColor';
 
-let ESC = `\x1b`;
+export let feature = {};
 
-export let reset = `${ESC}c${ESC}[?1000l${ESC}[?25h`;
-export let clear = `${ESC}[H${ESC}[J`;
+feature.enableMouseTracking = { in: `\x1b[?1000h`, out: `\x1b[?1000l` };
+feature.enableMouseHoldTracking = { in: `\x1b[?1002h`, out: `\x1b[?1002l` };
+feature.enableMouseMoveTracking = { in: `\x1b[?1003h`, out: `\x1b[?1003l` };
+feature.enableExtendedCoordinates = { in: `\x1b[?1006h`, out: `\x1b[?1006l` };
 
-export let style = (function getStyle() {
+export let screen = {};
 
-    let style = {};
+screen.reset = `\x1bc\x1b[?1000l\x1b[?25h`;
+screen.clear = `\x1b[H\x1b[J`;
 
-    style.clear = `${ESC}[m\x0f`;
-    style.bold = { in: `${ESC}[1m`, out: `${ESC}[21m` };
-    style.dim = { in: `${ESC}[2m`, out: `${ESC}[22m` };
-    style.italic = { in: `${ESC}[3m`, out: `${ESC}[23m` };
-    style.underline = { in: `${ESC}[4m`, out: `${ESC}[24m` };
-    style.inverse = { in: `${ESC}[7m`, out: `${ESC}[27m` };
-    style.hidden = { in: `${ESC}[8m`, out: `${ESC}[28m` };
-    style.strikethrough = { in: `${ESC}[9m`, out: `${ESC}[29m` };
+export let cursor = {};
 
-    style.front = id => style.front[id] || getColor(id, COLOR_FG);
-    style.front.out = getColorReset(COLOR_FG);
+cursor.display = `\x1b[34h\x1b[?25h`;
+cursor.hide = `\x1b[?25l`;
+cursor.highlight = `\x1b[34l`;
 
-    for (let colorName of Object.keys(colorNames))
-        style.front[colorName] = getColor(colorNames[colorName], COLOR_FG);
+cursor.upBy = (n = 1) => n === 0 ? `` : n < 0 ? cursor.downBy(-n) : `\x1b[${n}A`;
+cursor.downBy = (n = 1) => n === 0 ? `` : n < 0 ? cursor.upBy(-n) : `\x1b[${n}B`;
+cursor.leftBy = (n = 1) => n === 0 ? `` : n < 0 ? cursor.rightBy(-n) : `\x1b[${n}D`;
+cursor.rightBy = (n = 1) => n === 0 ? `` : n < 0 ? cursor.leftBy(-n) : `\x1b[${n}C`;
 
-    style.back = id => style.back[id] || getColor(id, COLOR_BG);
-    style.back.out = getColorReset(COLOR_BG);
+cursor.moveTo = ({ x, y, col = x, row = y }) => `\x1b[${row + 1};${col + 1}H`;
+cursor.moveBy = ({ x, y, col = x, row = y }) => `${cursor.downBy(y)}${cursor.rightBy(x)}`;
 
-    for (let colorName of Object.keys(colorNames))
-        style.back[colorName] = getColor(colorNames[colorName], COLOR_BG);
+export let style = { cursor: {} };
 
-    style.cursor = {};
+style.clear = `\x1b[m\x0f`;
+style.bold = { in: `\x1b[1m`, out: `\x1b[21m` };
+style.dim = { in: `\x1b[2m`, out: `\x1b[22m` };
+style.italic = { in: `\x1b[3m`, out: `\x1b[23m` };
+style.underline = { in: `\x1b[4m`, out: `\x1b[24m` };
+style.inverse = { in: `\x1b[7m`, out: `\x1b[27m` };
+style.hidden = { in: `\x1b[8m`, out: `\x1b[28m` };
+style.strikethrough = { in: `\x1b[9m`, out: `\x1b[29m` };
 
-    style.cursor.normal = `${ESC}[34h${ESC}[?25h`;
-    style.cursor.hidden = `${ESC}[?25l`;
-    style.cursor.obvious = `${ESC}[34l`;
+style.front = id => style.front[id] || getColor(id, COLOR_FG);
+style.front.out = getColorReset(COLOR_FG);
 
-    return style;
+style.back = id => style.back[id] || getColor(id, COLOR_BG);
+style.back.out = getColorReset(COLOR_BG);
 
-}())
+for (let colorName of Object.keys(colorNames))
+    style.front[colorName] = getColor(colorNames[colorName], COLOR_FG);
 
-export let moveTo = ({ x, y, col = x, row = y }) => {
-
-    if (col == null || row == null)
-        throw new Error(`Invalid parameters`);
-
-    return `${ESC}[${row + 1};${col + 1}H`;
-
-};
+for (let colorName of Object.keys(colorNames))
+    style.back[colorName] = getColor(colorNames[colorName], COLOR_BG);

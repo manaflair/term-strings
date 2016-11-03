@@ -1,9 +1,9 @@
 import { closest as closestColor } from 'color-diff';
 
-import { palette16, palette256 }   from './colorPalettes';
-import { doesSupportBasicColors }  from './support';
-import { doesSupport256Colors }    from './support';
-import { doesSupportTrueColors }   from './support';
+import { palette16, palette256 }   from '../data/colorPalettes';
+import { doesSupport16Colors }     from '../support';
+import { doesSupport256Colors }    from '../support';
+import { doesSupportTrueColors }   from '../support';
 
 export let COLOR_FG = 0;
 export let COLOR_BG = 10;
@@ -49,9 +49,9 @@ export function getColor(hex, target) {
         return `\x1b[${38 + target};5;${index}m`;
     }
 
-    if (doesSupportBasicColors) {
+    if (doesSupport16Colors) {
         let index = getClosestColor(hex, hydratedPalette16);
-        return `\x1b[${(index < 8 ? 30 : 90) + target + index}m`;
+        return `\x1b[${(index < 8 ? 30 : 90 - 8) + target + index}m`;
     }
 
     return ``;
@@ -60,7 +60,7 @@ export function getColor(hex, target) {
 
 export function getColorReset(target) {
 
-    if (doesSupportTrueColors || doesSupport256Colors || doesSupportBasicColors)
+    if (doesSupportTrueColors || doesSupport256Colors || doesSupport16Colors)
         return `\x1b[${39 + target}m`;
 
     return ``;

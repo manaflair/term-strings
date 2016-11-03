@@ -1,6 +1,6 @@
 # [![Term-Strings](/logo.png?raw=true)](https://github.com/manaflair/term-strings)
 
-> Easily manipulate your terminal, from your CLI or from Node
+> Easily communicate with your terminal, straight from your CLI or from Node
 
 [![](https://img.shields.io/npm/v/@manaflair/term-strings.svg)]() [![](https://img.shields.io/npm/l/@manaflair/term-strings.svg)]()
 
@@ -66,28 +66,42 @@ let suffix = style.bold.out + style.front.out;
 console.log(`${prefix}Hello!${suffix}`);
 ```
 
-Term-Strings also support truecolors if available (if not, colors will be gracefully degraded to match either 256 colors or 4-bits colors, depending on your terminal capabilities):
+## Color support
+
+Term-Strings fully supports the truecolors mode (aka 16,777,216-colors mode), up to the point where they're actually used internally all along, until we actually print them to the screen, at which point they'll be gracefully degraded to 256-colors, then 16-colors, then finally monochrome, according to your terminal configuration (there's a small catch, check below).
 
 ```js
 import { style } from '@manaflair/term-strings';
 
-let prefix = style.front(`#123456`);
-let suffix = style.front.out;
+let prefix = style.bold + style.front(`#663399`);
+let suffix = style.bold.out + style.front.out;
+
+console.log(`${prefix}Hello!${suffix}`);
 ```
 
-It is advised to cache the result of the `front` and `back` functions, as calling them multiple times in a single render might become quite expensive.
+Note that it is strongly advised to cache the result of the `style.front()` and `style.back()` functions, as calling them multiple times in a single render might become quite expensive (to the point where it can become the major bottleneck of your application). In order to somewhat alleviate this issue, Term-Strings automatically builds a cache entry for each named color in the CSS standard, and make them available as style properties (for example `style.front.purple`). Since these properties are precomputed, using them has no impact on performances.
 
-## Detecting truecolors
+### Feature detection
 
-Truecolor detection isn't currently possible without a bit of help. Thank terminfo for [refusing to implement this in their databases, and generally being a dick about it](https://lists.gnu.org/archive/html/bug-ncurses/2016-08/msg00036.html) (they have been notified since 2013).
-
-In order to enable truecolors, you'll need to export a `TERM_FEATURES` environment variable:
+Despite being natively supported, the truecolors feature detection isn't currently possible without a bit of help (this information cannot be extracted from the terminfo database at the moment, and their maintainers apparently have little interest in supporting it). In order to enable truecolors, you'll need to export a `TERM_FEATURES` environment variable as such:
 
 ```
 $> export TERM_FEATURES="true-colors:$TERM_FEATURES"
 ```
 
-Note that you can also use this variable to enable the 256 colors mode (`256-colors`) or even the basic colors mode (`basic-colors`), should Term-Strings fail to recognize them.
+(This environment variable can also be used to manually enable the 256-colors mode (`256-colors`) or even the 16-colors mode (`16-colors`), should Term-Strings fail to recognize any of them)
+
+## Parsing terminal sequences
+
+From time to time, and especially when working while in raw mode (`process.stdin.setRawMode(true)`), your terminal might send you cryptic sequences to indicate that a particular key or mouse event occured. Efficiently parsing them yourself might be quite tricky, so Term-Strings ships with a dedicated parser to help you in this task:
+
+```js
+import { Key, Mouse, parseTerminalInput } from '@manaflair/term-strings/parse';
+
+parseTerminalInput(process.stdin).subscribe(input => {
+    console.log(input); // A Node.js Buffer, or a Term-Strings Key or Mouse instance
+});
+```
 
 ## License (MIT)
 

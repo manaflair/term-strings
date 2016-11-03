@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import 'core-js';
+
 import { style } from '../core';
 
 let mode = `in`;
@@ -32,7 +34,7 @@ for (let arg of process.argv.slice(2)) {
         if (target === undefined)
             break;
 
-        if (typeof target === `function`) {
+        if (typeof target === `function` && part.match(/^#([0-9a-f]{3}|[0-9a-f]{6)$/i)) {
             target = target(part);
         } else if (Object.prototype.hasOwnProperty.call(target, part)) {
             target = target[part];
