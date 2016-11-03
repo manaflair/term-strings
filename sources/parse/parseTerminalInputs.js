@@ -20,7 +20,7 @@ function streamToObservable(stream) {
 
 }
 
-export function parseTerminalInput(input) {
+export function parseTerminalInputs(input) {
 
     if (!(`subscribe` in input) && `read` in input)
         input = streamToObservable(input);

@@ -96,9 +96,9 @@ $> export TERM_FEATURES="true-colors:$TERM_FEATURES"
 From time to time, and especially when working while in raw mode (`process.stdin.setRawMode(true)`), your terminal might send you cryptic sequences to indicate that a particular key or mouse event occured. Efficiently parsing them yourself might be quite tricky, so Term-Strings ships with a dedicated parser to help you in this task:
 
 ```js
-import { Key, Mouse, parseTerminalInput } from '@manaflair/term-strings/parse';
+import { Key, Mouse, parseTerminalInputs } from '@manaflair/term-strings/parse';
 
-parseTerminalInput(process.stdin).subscribe(input => {
+parseTerminalInputs(process.stdin).subscribe(input => {
     console.log(input); // A Node.js Buffer, or a Term-Strings Key or Mouse instance
 });
 ```
