@@ -1,6 +1,6 @@
 {
   "name": "@manaflair/term-strings",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "license": "MIT",
   "bin": {
     "term-strings": "./build/bin/term-strings.js",
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "mocha --compilers js:babel-register -r core-js $(find sources -name '*.test.js')",
-    "demo": "node -r babel-register -- sources/bin/term-strings -i front.red -r 'Red Text' -o front -r ' and ' -i front.green -r 'Green Text' -o front",
+    "demo": "node -r babel-register -- sources/bin/term-strings style.color.front.red -r 'Red Text' style.color.front.out -r ' and ' style.color.front.green -r 'Green Text' style.color.front.out -r '\n'",
     "build": "babel -D -d build/ sources/",
     "prepublish": "npm run build"
   },

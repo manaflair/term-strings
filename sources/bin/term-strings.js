@@ -2,20 +2,14 @@
 
 import 'core-js';
 
-import { style } from '../core';
+import * as TermStrings from '../core';
 
 let mode = `in`;
 let strings = [];
 
 for (let arg of process.argv.slice(2)) {
 
-    if (arg === `--in` || arg === `-i`) {
-        mode = `in`;
-        continue;
-    } else if (arg === `--out` || arg === `-o`) {
-        mode = `out`;
-        continue;
-    } else if (arg === `--raw` || arg === `-r`) {
+    if (arg === `--raw` || arg === `-r`) {
         mode = `raw`;
         continue;
     } else if (arg.startsWith(`-`)) {
@@ -24,10 +18,11 @@ for (let arg of process.argv.slice(2)) {
 
     if (mode === `raw`) {
         strings.push(arg);
+        mode = `in`;
         continue;
     }
 
-    let target = style;
+    let target = TermStrings;
 
     for (let part of arg.split(/\./g)) {
 
@@ -47,12 +42,10 @@ for (let arg of process.argv.slice(2)) {
     if (target === undefined)
         throw new Error(`Cannot find any terminal string for this selector: "${arg}"`);
 
-    if (typeof target !== `string` && Object.prototype.hasOwnProperty.call(target, mode))
-        target = target[mode];
+    if (typeof target !== `string`)
+        throw new Error(`The selector "${arg}" doesn't match a value of type string (got ${typeof target} instead)`);
 
-    if (typeof target === `string`) {
-        strings.push(target);
-    }
+    strings.push(target);
 
 }
 

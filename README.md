@@ -15,44 +15,35 @@ $> npm install --save @manaflair/term-strings
 ## Usage (Terminal)
 
 ```
-$> term-strings --in front.red
+$> term-strings style.color.front.rebeccapurple
 ```
 
-The `--in` option (also available as `-i`) is implied, so you can also write:
-
-```
-$> term-strings front.rebeccapurple
-```
-
-The `--out` option (also available as `-o`) outputs the sequence required to reset the requested style.
-
-```
-$> term-strings --out front
-```
-
-The `--raw` option (also available as `-r`) prints the raw strings that follow.
+The `--raw` option (also available as `-r`) directly print the raw strings that follow without transformation.
 
 ```
 $> term-strings --raw Hello world!
 ```
 
-You can use these options multiple times, in any order:
+You can use it multiple times, interlaced with regular sequence names:
 
 ```
 $> term-strings
-..   -i front.red
+..
+..   style.color.front.red
 ..     -r "Red Text"
-..   -o front
+..   style.color.front.out
+..
 ..   -r " and "
-..   -i front.green
+..
+..   style.color.front.green
 ..     -r "Green Text"
-..   -o front
+..   style.color.front.out
 ```
 
 Finally, note that hexadecimal colors can also be printed:
 
 ```
-$> term-strings front.#ff0000
+$> term-strings style.color.front.#FF0000
 ```
 
 ## Usage (Node.js)
@@ -60,8 +51,8 @@ $> term-strings front.#ff0000
 ```js
 import { style } from '@manaflair/term-strings';
 
-let prefix = style.bold + style.front.rebeccapurple;
-let suffix = style.bold.out + style.front.out;
+let prefix = style.emboldened.in + style.color.front.rebeccapurple;
+let suffix = style.emboldened.out + style.color.front.out;
 
 console.log(`${prefix}Hello!${suffix}`);
 ```
@@ -73,13 +64,13 @@ Term-Strings fully supports the truecolors mode (aka 16,777,216-colors mode), up
 ```js
 import { style } from '@manaflair/term-strings';
 
-let prefix = style.bold + style.front(`#663399`);
-let suffix = style.bold.out + style.front.out;
+let prefix = style.emboldened.in + style.color.front(`#663399`);
+let suffix = style.emboldened.out + style.color.front.out;
 
 console.log(`${prefix}Hello!${suffix}`);
 ```
 
-Note that it is strongly advised to cache the result of the `style.front()` and `style.back()` functions, as calling them multiple times in a single render might become quite expensive (to the point where it can become the major bottleneck of your application). In order to somewhat alleviate this issue, Term-Strings automatically builds a cache entry for each named color in the CSS standard, and make them available as style properties (for example `style.front.purple`). Since these properties are precomputed, using them has no impact on performances.
+Note that if you choose to use user-defined colors, it is strongly advised you cache the result of the `style.color.front()` and `style.color.back()` functions, as calling them multiple times in a single render might become quite expensive (to the point where it can become the major bottleneck of your application). In order to somewhat alleviate this issue, Term-Strings automatically builds a cache entry for each named color in the CSS standard, and make them available as style properties (for example `style.color.front.purple`). Since these properties are precomputed, using them has no impact on performances, which makes them suitable to be used everywhere in your application.
 
 ### Feature detection
 

@@ -2,8 +2,8 @@
 
 import 'core-js';
 
-import { feature }               from '../core';
-import { Key, parseInputStream } from '../parse';
+import { feature }                  from '../core';
+import { Key, parseTerminalInputs } from '../parse';
 
 process.stdin.setRawMode(true);
 
@@ -14,9 +14,10 @@ process.stdout.write(feature.enableExtendedCoordinates.in);
 process.stdout.write(`Do something, and see how term-strings interpreted your input.\n`);
 process.stdout.write(`Press ctrl+c to exit.\n`);
 
-parseInputStream(new Observable(observer => {
+parseTerminalInputs(new Observable(observer => {
 
     process.stdin.on(`data`, buffer => {
+        console.log(`Got: ${JSON.stringify(buffer.toString())}`);
         observer.next(buffer);
     });
 
