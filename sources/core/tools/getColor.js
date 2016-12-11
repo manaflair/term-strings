@@ -37,7 +37,7 @@ function getClosestColor(hex, target) {
 
 }
 
-export function getColor(hex, target) {
+export function getColorSequence(hex, target) {
 
     if (doesSupportTrueColors) {
         let { R: r, G: g, B: b } = hexToDec(hex);
@@ -64,5 +64,11 @@ export function getColorReset(target) {
         return `\x1b[${39 + target}m`;
 
     return ``;
+
+}
+
+export function getColor(hex, target) {
+
+    return { in: getColorSequence(hex, target), out: getColorReset(target) };
 
 }

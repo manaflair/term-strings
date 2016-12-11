@@ -30,6 +30,7 @@ cursor.moveBy = ({ x, y, col = x, row = y }) => `${cursor.downBy(y)}${cursor.rig
 export let style = { color: {} };
 
 style.clear = `\x1b[m\x0f`;
+
 style.emboldened = { in: `\x1b[1m`, out: `\x1b[22m` };
 style.fainted = { in: `\x1b[2m`, out: `\x1b[22m` };
 style.italic = { in: `\x1b[3m`, out: `\x1b[23m` };

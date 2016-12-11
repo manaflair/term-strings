@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "mocha --compilers js:babel-register -r core-js $(find sources -name '*.test.js')",
-    "demo": "node -r babel-register -- sources/bin/term-strings style.color.front.red -r 'Red Text' style.color.front.out -r ' and ' style.color.front.green -r 'Green Text' style.color.front.out -r '\n'",
+    "demo": "node -r babel-register -- sources/bin/term-strings style.color.front.red.in -r 'Red Text' style.color.front.out -r ' and ' style.color.front.green.in -r 'Green Text' style.color.front.out -r '\n'",
     "build": "babel -D -d build/ sources/",
     "prepublish": "npm run build"
   },

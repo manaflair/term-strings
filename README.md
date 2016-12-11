@@ -15,7 +15,7 @@ $> npm install --save @manaflair/term-strings
 ## Usage (Terminal)
 
 ```
-$> term-strings style.color.front.rebeccapurple
+$> term-strings style.color.front.rebeccapurple.in
 ```
 
 The `--raw` option (also available as `-r`) directly print the raw strings that follow without transformation.
@@ -29,13 +29,13 @@ You can use it multiple times, interlaced with regular sequence names:
 ```
 $> term-strings
 ..
-..   style.color.front.red
+..   style.color.front.red.in
 ..     -r "Red Text"
 ..   style.color.front.out
 ..
 ..   -r " and "
 ..
-..   style.color.front.green
+..   style.color.front.green.in
 ..     -r "Green Text"
 ..   style.color.front.out
 ```
@@ -51,7 +51,7 @@ $> term-strings style.color.front.#FF0000
 ```js
 import { style } from '@manaflair/term-strings';
 
-let prefix = style.emboldened.in + style.color.front.rebeccapurple;
+let prefix = style.emboldened.in + style.color.front.rebeccapurple.in;
 let suffix = style.emboldened.out + style.color.front.out;
 
 console.log(`${prefix}Hello!${suffix}`);
@@ -64,7 +64,7 @@ Term-Strings fully supports the truecolors mode (aka 16,777,216-colors mode), up
 ```js
 import { style } from '@manaflair/term-strings';
 
-let prefix = style.emboldened.in + style.color.front(`#663399`);
+let prefix = style.emboldened.in + style.color.front(`#663399`).in;
 let suffix = style.emboldened.out + style.color.front.out;
 
 console.log(`${prefix}Hello!${suffix}`);
