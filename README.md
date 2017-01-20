@@ -1,6 +1,6 @@
 # [![Term-Strings](/logo.png?raw=true)](https://github.com/manaflair/term-strings)
 
-> Easily communicate with your terminal, straight from your CLI or from Node
+> Terminal sequences for your terminal, from Node or your CLI
 
 [![](https://img.shields.io/npm/v/@manaflair/term-strings.svg)]() [![](https://img.shields.io/npm/l/@manaflair/term-strings.svg)]()
 
