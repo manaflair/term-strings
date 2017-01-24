@@ -9,6 +9,7 @@ process.stdin.setRawMode(true);
 
 process.stdout.write(feature.enableMouseTracking.in);
 process.stdout.write(feature.enableMouseHoldTracking.in);
+process.stdout.write(feature.enableMouseMoveTracking.in);
 process.stdout.write(feature.enableExtendedCoordinates.in);
 
 process.stdout.write(`Do something, and see how term-strings interpreted your input.\n`);

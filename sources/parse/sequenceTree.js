@@ -331,6 +331,11 @@ sequenceTree.mount(`\x1b[<34;`, makeNumberNode(tail => tail.mount(`;`, makeNumbe
     tail.register(`m`, sequence => new Mouse(`right`, Object.assign(parseMouseSequence(sequence))));
 }))));
 
+sequenceTree.mount(`\x1b[<35;`, makeNumberNode(tail => tail.mount(`;`, makeNumberNode(tail => {
+    tail.register(`M`, sequence => new Mouse(null, Object.assign(parseMouseSequence(sequence))));
+    tail.register(`m`, sequence => new Mouse(null, Object.assign(parseMouseSequence(sequence))));
+}))));
+
 sequenceTree.mount(`\x1b[<64;`, makeNumberNode(tail => tail.mount(`;`, makeNumberNode(tail => {
     tail.register(`M`, sequence => new Mouse(`wheel`, Object.assign(parseMouseSequence(sequence), { start: true, end: true, d: -1 })));
     tail.register(`m`, sequence => new Mouse(`wheel`, Object.assign(parseMouseSequence(sequence), { start: true, end: true, d: -1 })));
