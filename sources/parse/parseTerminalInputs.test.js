@@ -120,4 +120,24 @@ describe(`parseTerminalInputs`, () => {
 
     });
 
+    it(`should throttle successive mouse move sequences if requested`, async () => {
+
+        let inputSource = parseTerminalInputs(new Observable(observer => {
+
+            setTimeout(() => observer.next(new Buffer(`\x1b[<32;50;50M`)), 0);
+            setTimeout(() => observer.next(new Buffer(`\x1b[<32;12;34M`)), 20);
+            setTimeout(() => observer.next(new Buffer(`\x1b[<32;12;43M`)), 40);
+
+            setTimeout(() => observer.complete(), 80);
+
+        }), { throttleMouseMoveEvents: 30 });
+
+        await expect(inputSource).to.emit(value => {
+            expect(value).to.be.instanceOf(Mouse).and.to.deep.equal(new Mouse(`left`, { x: 11, y: 33 }));
+        }).then.emit(value => {
+            expect(value).to.be.instanceOf(Mouse).and.to.deep.equal(new Mouse(`left`, { x: 11, y: 42 }));
+        }).then.complete();
+
+    });
+
 });

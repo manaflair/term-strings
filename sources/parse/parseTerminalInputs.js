@@ -1,3 +1,4 @@
+import { Mouse }        from './types/Mouse';
 import { sequenceTree } from './sequenceTree';
 
 function streamToObservable(stream) {
@@ -20,7 +21,7 @@ function streamToObservable(stream) {
 
 }
 
-export function parseTerminalInputs(input) {
+export function parseTerminalInputs(input, { throttleMouseMoveEvents = 0 } = {}) {
 
     if (!(`subscribe` in input) && `read` in input)
         input = streamToObservable(input);
@@ -40,6 +41,46 @@ export function parseTerminalInputs(input) {
         let currentPath = [];
         let currentData = [];
 
+        let pendingMouseMove = null;
+        let throttleTimer = null;
+
+        function emit(data, { force = false } = {}) {
+
+            if (!force && throttleMouseMoveEvents > 0 && data instanceof Mouse && !data.start && !data.end) {
+
+                pendingMouseMove = data;
+
+                if (!throttleTimer) {
+
+                    throttleTimer = setTimeout(() => {
+
+                        observer.next(pendingMouseMove);
+
+                        pendingMouseMove = null;
+                        throttleTimer = null;
+
+                    }, throttleMouseMoveEvents);
+
+                }
+
+            } else {
+
+                if (throttleTimer) {
+                    clearTimeout(throttleTimer);
+                    throttleTimer = null;
+                }
+
+                if (pendingMouseMove) {
+                    observer.next(pendingMouseMove);
+                    pendingMouseMove = null;
+                }
+
+                observer.next(data);
+
+            }
+
+        }
+
         let inputSubscription = input.subscribe({
 
             complete() {
@@ -51,7 +92,7 @@ export function parseTerminalInputs(input) {
                 if (currentOutput !== null) {
 
                     // We emit the last key seen
-                    observer.next(currentOutput(currentSequence));
+                    emit(currentOutput(currentSequence));
                     currentNode = sequenceTree;
                     currentSequence = [];
                     currentOutput = null;
@@ -62,7 +103,7 @@ export function parseTerminalInputs(input) {
                 // If no sequence has been found, we can just emit our buffered data
                 } else if (currentData.length > 0) {
 
-                    observer.next(new Buffer(currentData));
+                    emit(new Buffer(currentData));
 
                 }
 
@@ -89,7 +130,7 @@ export function parseTerminalInputs(input) {
                             if (currentOutput !== null) {
 
                                 // We emit the last key seen
-                                observer.next(currentOutput(currentSequence));
+                                emit(currentOutput(currentSequence));
                                 currentNode = sequenceTree;
                                 currentSequence = [];
                                 currentOutput = null;
@@ -112,7 +153,7 @@ export function parseTerminalInputs(input) {
 
                                 // If there was some data before the key, we need to emit them first
                                 if (currentData.length > 0) {
-                                    observer.next(new Buffer(currentData));
+                                    emit(new Buffer(currentData));
                                     currentData = [];
                                 }
 
@@ -121,7 +162,7 @@ export function parseTerminalInputs(input) {
                                 currentOutput = sub.output;
 
                                 // We can the emit the key
-                                observer.next(currentOutput(currentSequence));
+                                emit(currentOutput(currentSequence));
                                 currentNode = sequenceTree;
                                 currentSequence = [];
                                 currentOutput = null;
@@ -148,7 +189,7 @@ export function parseTerminalInputs(input) {
 
                     // If we know we won't receive any more data, we can send the current sequence
                     if (inputIsComplete && currentOutput !== null) {
-                        observer.next();
+                        //emit();
                         pendingData = currentSequence;
                         currentSequence = [];
                         currentOutput = null;
@@ -158,7 +199,7 @@ export function parseTerminalInputs(input) {
 
                 // If we're not following a possible sequence, we can emit the buffered data
                 if (currentNode === sequenceTree && currentData.length > 0) {
-                    observer.next(new Buffer(currentData));
+                    emit(new Buffer(currentData));
                     currentData = [];
                 }
 
