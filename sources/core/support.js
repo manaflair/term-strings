@@ -17,3 +17,11 @@ if (process.env.TERM_FEATURES) {
     }
 
 }
+
+if (process.env.COLORTERM) {
+
+    if (/\b(truecolor|24bit)\b/.test(process.env.COLORTERM)) {
+        doesSupportTrueColors = true;
+    }
+
+}
