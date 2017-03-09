@@ -240,6 +240,9 @@ export let sequences = buildRegistrations({
 
 }).concat([
 
+    [ `\x1b[`, NumberNode, `;5u`, sequence => new Key(String.fromCharCode(String.fromCharCode(... sequence).match(/([0-9]+)/)[0]), { ctrl: true }) ],
+    [ `\x1b[`, NumberNode, `;6u`, sequence => new Key(String.fromCharCode(String.fromCharCode(... sequence).match(/([0-9]+)/)[0]), { ctrl: true }) ],
+
     [ `\x1b[<0;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`left`, { ... parseMouseSequence(sequence), start: true }) ],
     [ `\x1b[<0;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`left`, { ... parseMouseSequence(sequence), end: true }) ],
 
