@@ -74,6 +74,28 @@ describe(`parseTerminalInputs`, () => {
 
     });
 
+    it(`should immediatly send the ESC key when there's no more entry in the current input feed`, async () => {
+
+        let inputSource = parseTerminalInputs(Observable.from([ new Buffer(`\x1b`), new Buffer(`a`) ]));
+
+        await expect(inputSource).to.emit(value => {
+            expect(value).to.be.instanceOf(Key).and.to.deep.equal(new Key(`escape`));
+        }).then.emit(value => {
+            expect(value).to.be.instanceOf(Buffer).and.to.deep.equal(new Buffer(`a`));
+        }).then.complete();
+
+    });
+
+    it(`should not send the ESC key when received with inputs that might belong to the same sequence`, async () => {
+
+        let inputSource = parseTerminalInputs(Observable.from([ new Buffer(`\x1ba`) ]));
+
+        await expect(inputSource).to.emit(value => {
+            expect(value).to.be.instanceOf(Key).and.to.deep.equal(new Key(`a`, { alt: true }));
+        }).then.complete();
+
+    });
+
     it(`should correctly return a buffer when data don't match any possible sequence`, async () => {
 
         let inputSource = parseTerminalInputs(Observable.from([ new Buffer(`hello`) ]));

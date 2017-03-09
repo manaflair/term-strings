@@ -98,10 +98,10 @@ export class Parser {
 
         };
 
-        for (let input of stream) {
+        for (let t = 0; t < stream.length; ++t) {
 
-            if (typeof input === `string`)
-                input = input.charCodeAt(0);
+            let input = stream[t];
+            let isLast = t + 1 === stream.length;
 
             let nextCandidates = [];
             let nextCurrent = [];
@@ -142,7 +142,7 @@ export class Parser {
 
             }
 
-            if (nextCurrent.length === 0 || nextCurrent.filter(node => node.hasChildren()).length === 0) {
+            if (nextCurrent.length === 0 || nextCurrent.filter(node => node.hasChildren()).length === 0 || (isLast && this.unconfirmedInput.length === 0)) {
 
                 if (this.candidates.length === 0) {
 
