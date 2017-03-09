@@ -1,6 +1,6 @@
 export class Mouse {
 
-    constructor(name, { x = 0, y = 0, d = 0, start = false, end = false } = {}) {
+    constructor(name, { x = 0, y = 0, d = 0, start = false, end = false, alt = false, ctrl = false } = {}) {
 
         this.name = name;
 
@@ -11,11 +11,22 @@ export class Mouse {
         this.start = start;
         this.end = end;
 
+        this.alt = alt;
+        this.ctrl = ctrl;
+
     }
 
     inspect() {
 
-        return `<Mouse ${this.name} @${this.x};${this.y}(${this.d >= 0 ? `+` : `-`}${Math.abs(this.d)}) start=${this.start} end=${this.end}>`;
+        let name = this.name;
+
+        if (this.alt)
+            name += `+alt`;
+
+        if (this.ctrl)
+            name += `+ctrl`;
+
+        return `<Mouse ${name} @${this.x};${this.y}(${this.d >= 0 ? `+` : `-`}${Math.abs(this.d)}) start=${this.start} end=${this.end}>`;
 
     }
 

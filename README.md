@@ -74,13 +74,13 @@ Note that if you choose to use user-defined colors, it is strongly advised you c
 
 ### Feature detection
 
-Despite being natively supported, the truecolors feature detection isn't currently possible without a bit of help (this information cannot be extracted from the terminfo database at the moment, and their maintainers apparently have little interest in supporting it). In order to enable truecolors, you'll need to export a `TERM_FEATURES` environment variable as such:
+Despite being natively supported, the truecolors feature detection isn't currently possible without a bit of help (this information cannot be extracted from the terminfo database at the moment, and their maintainers apparently have little interest in supporting it). In order to enable truecolors, you'll need to export a `COLORTERM` environment variable as such:
 
 ```
-$> export TERM_FEATURES="true-colors:$TERM_FEATURES"
+$> export COLORTERM=truecolors
 ```
 
-(This environment variable can also be used to manually enable the 256-colors mode (`256-colors`) or even the 16-colors mode (`16-colors`), should Term-Strings fail to recognize any of them)
+Note that this variable is also used by a few other applications, so you might benefit using it even without considering Term-Strings.
 
 ## Parsing terminal sequences
 
