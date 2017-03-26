@@ -1,102 +1,57 @@
-import { TermString } from './TermString';
+import { TermStringStyle } from './TermStringStyle';
+import { TermString }      from './TermString';
 
 export class TermStringBuilder {
 
     constructor() {
 
-        this.sections = [ new Set() ];
-
+        this.sections = [ { style: TermStringStyle.empty , text: `` } ];
         this.length = 0;
 
     }
 
-    enter(attribute) {
+    getLastSection() {
 
-        if (!attribute)
+        return this.sections[this.sections.length - 1];
+
+    }
+
+    pushStyle(props) {
+
+        let currentStyle = this.getLastSection().style;
+        let nextStyle = currentStyle.merge(props);
+
+        if (nextStyle === currentStyle)
             return this;
 
-        if (this.sections.length % 3 === 2)
-            this.sections.push(new Set());
-
-        if (this.sections.length % 3 === 0)
-            this.sections.push(new Set());
-
-        this.sections[this.sections.length - 1].add(attribute);
+        if (this.getLastSection().text.length === 0)
+            this.getLastSection().style = nextStyle;
+        else
+            this.sections.push({ style: nextStyle, text: `` });
 
         return this;
 
     }
 
-    append(text) {
+    pushText(text) {
 
-        if (!text)
+        if (text.length === 0)
             return this;
 
-        if (text instanceof TermString)
-            return this.inject(text);
+        if (text instanceof TermString) {
 
-        if (this.sections.length % 3 === 0)
-            this.sections.push(new Set());
-
-        if (this.sections.length % 3 === 1)
-            this.sections.push(``);
-
-        this.sections[this.sections.length - 1] += text;
-        this.length += text.length;
-
-        return this;
-
-    }
-
-    leave(attribute) {
-
-        if (!attribute)
-            return this;
-
-        if (this.sections.length % 3 === 1)
-            this.sections.push(``);
-
-        if (this.sections.length % 3 === 2)
-            this.sections.push(new Set());
-
-        this.sections[this.sections.length - 1].add(attribute);
-
-        return this;
-
-    }
-
-    inject(string) {
-
-        if (!string)
-            return this;
-
-        for (let sectionIndex = 0; sectionIndex < string.sections.length; ++sectionIndex) {
-
-            switch (sectionIndex % 3) {
-
-                case 0: {
-
-                    for (let attribute of string.sections[sectionIndex]) {
-                        this.enter(attribute);
-                    }
-
-                } break;
-
-                case 1: {
-
-                    this.append(string.sections[sectionIndex]);
-
-                } break;
-
-                case 2: {
-
-                    for (let attribute of string.sections[sectionIndex]) {
-                        this.leave(attribute);
-                    }
-
-                } break;
-
+            for (let section of text.sections) {
+                this.pushStyle(section.style);
+                this.pushText(section.text);
             }
+
+        } else {
+
+            if (typeof text !== `string`)
+                text = String(text);
+
+            this.getLastSection().text += text;
+            this.length += text.length;
 
         }
 
@@ -106,18 +61,13 @@ export class TermStringBuilder {
 
     build() {
 
-        if (this.length === 0)
-            return ``;
+        // We special-case to directly return strings that do not use any property
 
-        if (this.sections.length === 2 && this.sections[0].size === 0)
-            return this.sections[1];
-
-        let significantSections = Math.floor((this.sections.length - 2) / 3) * 3 + 2;
-
-        let sections = this.sections.slice(0, significantSections);
-        let length = this.length;
-
-        return new TermString(sections, length);
+        if (this.sections.length > 1 || this.sections[0].style !== TermStringStyle.empty) {
+            return new TermString(this.sections, this.length);
+        } else {
+            return this.sections[0].text;
+        }
 
     }
 

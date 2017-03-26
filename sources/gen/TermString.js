@@ -1,6 +1,7 @@
 import { style }             from '../core';
 
 import { TermStringBuilder } from './TermStringBuilder';
+import { TermStringStyle }   from './TermStringStyle';
 
 export class TermString {
 
@@ -48,79 +49,34 @@ export class TermString {
         if (offset >= this.length || length === 0)
             return ``;
 
-        // Find the token from where we need to start slicing
-
-        let firstIndex = 1;
-
-        while (firstIndex < this.sections.length && offset >= this.sections[firstIndex].length) {
-            offset -= this.sections[firstIndex].length;
-            firstIndex += 3;
-        }
-
-        // Find all the active attributes from the beginning of the string to this token
-
-        let attributes = new Set();
-
-        for (let sectionIndex = 0; sectionIndex < firstIndex; sectionIndex += 1) {
-
-            switch (sectionIndex % 3) {
-
-                case 0: { // enter
-
-                    for (let attribute of this.sections[sectionIndex]) {
-                        attributes.add(attribute);
-                    }
-
-                } break;
-
-                case 2: { // leave
-
-                    for (let attribute of this.sections[sectionIndex]) {
-                        attributes.delete(attribute);
-                    }
-
-                } break;
-
-            }
-
-        }
-
-        // Create a new string builder, and add all those attributes into it
+        // Create a new string builder
 
         let result = new TermStringBuilder();
 
-        for (let attribute of attributes)
-            result.enter(attribute);
-
         // Iterate over the following sections
 
-        let sectionIndex = firstIndex;
+        for (let t = 0; t < this.sections.length && length > 0; ++t) {
 
-        while (sectionIndex < this.sections.length && length > 0) {
+            // Skip the sections until we are in the right range
 
-            // Skip the "enter" field of the first section, since we've already processed it before
+            if (this.sections[t].text.length <= offset) {
+                offset -= this.sections[t].text.length;
+                continue;
+            }
 
-            if (sectionIndex !== firstIndex)
-                for (let attribute of this.sections[sectionIndex - 1])
-                    result.enter(attribute);
+            // Push the style of the section
 
-            // We need to use substr because we might need to start slicing from inside the token
+            result.pushStyle(this.sections[t].style);
 
-            let newToken = this.sections[sectionIndex].substr(offset, length);
-            result.append(newToken);
+            // And push a slice of the text (we will only need part of the first section)
 
-            offset = 0;
+            let newToken = this.sections[t].text.substr(offset, length);
+            result.pushText(newToken);
+
+            // Updates the slice boundaries
+
             length -= newToken.length;
-
-            // Process the "leave" field
-
-            if (sectionIndex + 1 < this.sections.length && length > 0)
-                for (let attribute of this.sections[sectionIndex + 1])
-                    result.leave(attribute);
-
-            // Move to the next section
-
-            sectionIndex += 3;
+            offset = 0;
 
         }
 
@@ -139,7 +95,7 @@ export class TermString {
         let result = new TermStringBuilder();
 
         for (let t = 0; t < count; ++t)
-            result.append(this);
+            result.pushText(this);
 
         return result.build();
 
@@ -157,8 +113,8 @@ export class TermString {
 
         let result = new TermStringBuilder();
 
-        result.append(pad);
-        result.append(this);
+        result.pushText(pad);
+        result.pushText(this);
 
         return result.build();
 
@@ -176,8 +132,8 @@ export class TermString {
 
         let result = new TermStringBuilder();
 
-        result.append(this);
-        result.append(pad);
+        result.pushText(this);
+        result.pushText(pad);
 
         return result.build();
 
@@ -187,51 +143,42 @@ export class TermString {
 
         let string = ``;
 
-        let activeAttributes = new Set();
+        let currentStyle = new TermStringStyle();
 
-        for (let t = 0; t < this.sections.length; ++t) {
+        for (let section of this.sections) {
 
-            switch (t % 3) {
+            // Only the final section can have an empty length; we skip it, because we will use a clear sequence instead
 
-                case 0: { // enter
+            if (section.text.length === 0)
+                continue;
 
-                    for (let attribute of this.sections[t]) {
+            // Otherwise, we iterate on each property that change in order to print the "out" sequence of those who have be deactivated, and the "in" sequence of those who have been added or changed
 
-                        if (activeAttributes.has(attribute))
-                            continue;
+            let diff = currentStyle.diff(section.style);
 
-                        activeAttributes.add(attribute);
-                        string += attribute.in;
+            for (let prop of diff) {
 
-                    }
-
-                } break;
-
-                case 1: { // text
-
-                    string += this.sections[t];
-
-                } break;
-
-                case 2: { // leave
-
-                    for (let attribute of this.sections[t]) {
-
-                        if (!activeAttributes.has(attribute))
-                            continue;
-
-                        activeAttributes.delete(attribute);
-                        string += attribute.out;
-
-                    }
-
-                } break;
+                if (section.style[prop]) {
+                    string += section.style[prop].in;
+                } else {
+                    string += currentStyle[prop].out;
+                }
 
             }
 
+            // We can now bake the text inside the returned string
+
+            string += section.text;
+
+            // And finally we switch the current style map
+
+            currentStyle = section.style;
+
         }
 
-        if (activeAttributes.size > 0)
+        // If some properties are still enabled at this point, we just disable them all using a clear code
+
+        if (Object.keys(currentStyle).some(prop => currentStyle[prop]))
             string += style.clear;
 
         return string;

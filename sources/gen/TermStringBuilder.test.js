@@ -15,7 +15,7 @@ describe(`TermStringBuilder`, () => {
 
         it(`should return a classic string if there's no raw text`, () => {
 
-            expect(new TermStringBuilder().append(`foobar`).build()).to.equal(`foobar`);
+            expect(new TermStringBuilder().pushText(`foobar`).build()).to.equal(`foobar`);
 
         });
 
@@ -27,13 +27,13 @@ describe(`TermStringBuilder`, () => {
 
             it(`should add text at the end of the string`, () => {
 
-                expect(new TermStringBuilder().append(`foobar`).append(`supertest`).build().toString()).to.equal(`foobarsupertest`);
+                expect(new TermStringBuilder().pushText(`foobar`).pushText(`supertest`).build().toString()).to.equal(`foobarsupertest`);
 
             });
 
             it(`should not increase the string length when appending raw text`, () => {
 
-                expect(new TermStringBuilder().enter(style.emboldened).append(`test`).build().length).to.equal(4);
+                expect(new TermStringBuilder().pushStyle({ emboldened: style.emboldened }).pushText(`test`).build().length).to.equal(4);
 
             });
 
