@@ -30,7 +30,7 @@ cursor.rightBy = (n = 1) => n === 0 ? `` : n < 0 ? cursor.leftBy(-n) : `\x1b[${n
 cursor.moveTo = ({ x, y, col = x, row = y }) => `\x1b[${row + 1};${col + 1}H`;
 cursor.moveBy = ({ x, y, col = x, row = y }) => `${cursor.downBy(y)}${cursor.rightBy(x)}`;
 
-export let style = { color: {} };
+export let style = {};
 
 style.clear = `\x1b[m\x0f`;
 
@@ -41,6 +41,8 @@ style.underlined = { in: `\x1b[4m`, out: `\x1b[24m` };
 style.inversed = { in: `\x1b[7m`, out: `\x1b[27m` };
 style.hidden = { in: `\x1b[8m`, out: `\x1b[28m` };
 style.strikethrough = { in: `\x1b[9m`, out: `\x1b[29m` };
+
+style.color = id => ({ front: style.color.front(id), back: style.color.back(id) });
 
 style.color.front = id => style.color.front[id] ? style.color.front[id] : getColor(id, COLOR_FG);
 style.color.front.out = getColorReset(COLOR_FG);
