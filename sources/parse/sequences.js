@@ -37,7 +37,7 @@ let applyModifiers = (sequenceBuilder, name) => ({
 
 let parseCursorSequence = sequence => {
 
-    let [ all, x, y ] = String.fromCharCode(... sequence).match(/^\x1b\[([0-9]+);([0-9]+)R$/);
+    let [ all, y, x ] = String.fromCharCode(... sequence).match(/^\x1b\[([0-9]+);([0-9]+)R$/);
 
     return { x: Number(x) - 1, y: Number(y) - 1 };
 
