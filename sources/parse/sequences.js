@@ -1,4 +1,5 @@
 import { NumberNode } from './parser/NumberNode';
+import { Cursor }     from './types/Cursor';
 import { Key }        from './types/Key';
 import { Mouse }      from './types/Mouse';
 
@@ -33,6 +34,14 @@ let applyModifiers = (sequenceBuilder, name) => ({
     [sequenceBuilder(1 + (shift | alt | ctrl | meta))]: new Key(name, { shift: true, alt: true, ctrl: true, alt: true }),
 
 });
+
+let parseCursorSequence = sequence => {
+
+    let [ all, x, y ] = String.fromCharCode(... sequence).match(/^\x1b\[([0-9]+);([0-9]+)R$/);
+
+    return { x: Number(x) - 1, y: Number(y) - 1 };
+
+};
 
 let parseMouseSequence = sequence => {
 
@@ -239,6 +248,8 @@ export let sequences = buildRegistrations({
     [`\x1bz`]: new Key(`z`, { alt: true }),
 
 }).concat([
+
+    [ `\x1b[`, NumberNode, `;`, NumberNode, `R`, sequence => new Cursor(parseCursorSequence(sequence)) ],
 
     [ `\x1b[`, NumberNode, `;5u`, sequence => new Key(String.fromCharCode(String.fromCharCode(... sequence).match(/([0-9]+)/)[0]), { ctrl: true }) ],
     [ `\x1b[`, NumberNode, `;6u`, sequence => new Key(String.fromCharCode(String.fromCharCode(... sequence).match(/([0-9]+)/)[0]), { ctrl: true }) ],

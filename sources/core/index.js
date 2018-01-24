@@ -30,6 +30,8 @@ cursor.rightBy = (n = 1) => n === 0 ? `` : n < 0 ? cursor.leftBy(-n) : `\x1b[${n
 cursor.moveTo = ({ x, y, col = x, row = y }) => `\x1b[${row + 1};${col + 1}H`;
 cursor.moveBy = ({ x, y, col = x, row = y }) => `${cursor.downBy(y)}${cursor.rightBy(x)}`;
 
+cursor.request = `\x1b[6n`;
+
 export let style = {};
 
 style.clear = `\x1b[m\x0f`;
