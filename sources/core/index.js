@@ -12,6 +12,7 @@ export let screen = {};
 
 screen.reset = `\x1bc\x1b[?1000l\x1b[?25h`;
 screen.clear = `\x1b[H\x1b[J`;
+screen.clearBelow = `\x1b[J`;
 
 screen.alternateScreen = { in: `\x1b[?1049h`, out: `\x1b[?1049l` };
 screen.noWrap = { in: `\x1b[?7l`, out: `\x1b[?7h` };
