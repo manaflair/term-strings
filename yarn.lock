@@ -1332,6 +1332,11 @@ get-intrinsic@^1.0.2:
     has "^1.0.3"
     has-symbols "^1.0.1"
 
+gitbook-plugin-edit-link@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/gitbook-plugin-edit-link/-/gitbook-plugin-edit-link-2.0.2.tgz#d8fcd927eced81e7a662a72d59db609eafd7e72f"
+  integrity sha1-2PzZJ+ztgeemYqctWdtgnq/X5y8=
+
 glob-parent@~5.1.2:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.2.tgz#869832c58034fe68a4093c17dc15e8340d8401c4"
@@ -1506,6 +1511,14 @@ kind-of@^6.0.2:
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.3.tgz#07c05034a6c349fa06e24fa35aa76db4580ce4dd"
   integrity sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==
+
+light-observable@^2.13.1:
+  version "2.13.1"
+  resolved "https://registry.yarnpkg.com/light-observable/-/light-observable-2.13.1.tgz#538ebbcc78b2fc0c539888b80a51f82d3f52321c"
+  integrity sha512-PoTBwl1sm4oNkczVlZmPkApmci9CS2E3Q1cRJUt/b4tpqURH6EwNz9rDWv0P/fHwYD1kU7SukxsXX+UtMvGX9g==
+  dependencies:
+    gitbook-plugin-edit-link "^2.0.2"
+    symbol-observable "^1.2.0"
 
 locate-path@^3.0.0:
   version "3.0.0"
@@ -1891,6 +1904,11 @@ supports-color@^7.1.0:
   integrity sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==
   dependencies:
     has-flag "^4.0.0"
+
+symbol-observable@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"
+  integrity sha512-e900nM8RRtGhlV36KGEU9k65K3mPb1WV70OdjfxlG2EAuM1noi/E/BaW/uMhL7bPEssK8QV57vN3esixjUvcXQ==
 
 to-fast-properties@^2.0.0:
   version "2.0.0"

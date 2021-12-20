@@ -2,33 +2,12 @@ import { Parser }    from './parser/Parser';
 import { Mouse }     from './types/Mouse';
 import { sequences } from './sequences';
 
-function streamToObservable(stream) {
-
-    return new Observable(observer => {
-
-        stream.on(`data`, data => {
-            observer.next(data);
-        });
-
-        stream.on(`error`, error => {
-            observer.error(error);
-        });
-
-        stream.on(`end`, () => {
-            observer.complete();
-        });
-
-    });
-
-}
-
 export function parseTerminalInputs(input, { throttleMouseMoveEvents = 0 } = {}) {
 
-    if (!(`subscribe` in input) && `read` in input)
-        input = streamToObservable(input);
-
     if (!(`subscribe` in input))
-        throw new Error(`Invalid parameter, expected a readable tream or an observable`);
+        throw new Error(`Invalid parameter, expected an observable`);
+
+    const Observable = input.constructor;
 
     return new Observable(observer => {
 

@@ -7,8 +7,8 @@
     "term-strings-seqdbg": "./build/bin/term-strings-seqdbg.js"
   },
   "scripts": {
-    "test": "mocha --compilers js:babel-register -r core-js $(find sources -name '*.test.js')",
-    "demo": "node -r babel-register -- sources/bin/term-strings style.color.front.red.in -r 'Red Text' style.color.front.out -r ' and ' style.color.front.green.in -r 'Green Text' style.color.front.out -r '\n'",
+    "test": "mocha --require @babel/register $(find sources -name '*.test.js')",
+    "demo": "node -r @babel/register -- sources/bin/term-strings style.color.front.red.in -r 'Red Text' style.color.front.out -r ' and ' style.color.front.green.in -r 'Green Text' style.color.front.out -r '\n'",
     "build": "babel -D -d build/ sources/",
     "prepare": "npm run build"
   },
@@ -21,6 +21,7 @@
     "@babel/preset-env": "^7.16.5",
     "@babel/register": "^7.16.5",
     "chai": "^4.3.4",
+    "light-observable": "^2.13.1",
     "mocha": "^9.1.3"
   }
 }

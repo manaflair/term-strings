@@ -1,4 +1,5 @@
 import chai, { expect }        from 'chai';
+import { Observable }          from 'light-observable';
 
 import { parseTerminalInputs } from './parseTerminalInputs';
 import { Key }                 from './types/Key';
