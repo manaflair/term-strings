@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-import 'core-js';
-
 import * as TermStrings from '../core';
 
 let mode = `in`;

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import 'core-js';
+import { Observable }               from 'light-observable';
 
 import { feature }                  from '../core';
 import { Key, parseTerminalInputs } from '../parse';
