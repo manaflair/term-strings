@@ -1279,24 +1279,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@manaflair/term-strings@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "@manaflair/term-strings@workspace:."
-  dependencies:
-    "@babel/cli": ^7.16.0
-    "@babel/core": ^7.16.5
-    "@babel/preset-env": ^7.16.5
-    "@babel/register": ^7.16.5
-    chai: ^4.3.4
-    color-diff: ^1.2.0
-    light-observable: ^2.13.1
-    mocha: ^8
-  bin:
-    term-strings: ./build/bin/term-strings.js
-    term-strings-seqdbg: ./build/bin/term-strings-seqdbg.js
-  languageName: unknown
-  linkType: soft
-
 "@nicolo-ribaudo/chokidar-2@npm:2.1.8-no-fsevents.3":
   version: 2.1.8-no-fsevents.3
   resolution: "@nicolo-ribaudo/chokidar-2@npm:2.1.8-no-fsevents.3"
@@ -3349,6 +3331,24 @@ __metadata:
   checksum: a04c07bb9e2d8f46776517d4618f2406fb977a74d914ad98b264fc3db0fe8224da5bec11e5f8902c5b9bcb8ace22d95fbe3c7b36b8593b7dfc8391a25898f32f
   languageName: node
   linkType: hard
+
+"term-strings@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "term-strings@workspace:."
+  dependencies:
+    "@babel/cli": ^7.16.0
+    "@babel/core": ^7.16.5
+    "@babel/preset-env": ^7.16.5
+    "@babel/register": ^7.16.5
+    chai: ^4.3.4
+    color-diff: ^1.2.0
+    light-observable: ^2.13.1
+    mocha: ^8
+  bin:
+    term-strings: ./build/bin/term-strings.js
+    term-strings-seqdbg: ./build/bin/term-strings-seqdbg.js
+  languageName: unknown
+  linkType: soft
 
 "to-fast-properties@npm:^2.0.0":
   version: 2.0.0

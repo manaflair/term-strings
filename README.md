@@ -2,14 +2,12 @@
 
 > Terminal sequences for your terminal, from Node or your CLI
 
-[![](https://img.shields.io/npm/v/@manaflair/term-strings.svg)]() [![](https://img.shields.io/npm/l/@manaflair/term-strings.svg)]()
-
-[Check out our other OSS projects!](https://manaflair.github.io)
+[![npm version](https://img.shields.io/npm/v/term-strings.svg)](https://yarnpkg.com/package/term-strings) [![Licence](https://img.shields.io/npm/l/term-strings.svg)](https://github.com/arcanis/term-strings#license-mit) [![Yarn](https://img.shields.io/badge/developed%20with-Yarn%202-blue)](https://github.com/yarnpkg/berry)
 
 ## Installation
 
 ```
-$> npm install --save @manaflair/term-strings
+$> yarn add term-strings
 ```
 
 ## Usage (Terminal)
@@ -49,7 +47,7 @@ $> term-strings style.color.front.#FF0000
 ## Usage (Node.js)
 
 ```js
-import { style } from '@manaflair/term-strings';
+import { style } from 'term-strings';
 
 let prefix = style.emboldened.in + style.color.front.rebeccapurple.in;
 let suffix = style.emboldened.out + style.color.front.out;
@@ -62,7 +60,7 @@ console.log(`${prefix}Hello!${suffix}`);
 Term-Strings fully supports the truecolors mode (aka 16,777,216-colors mode), up to the point where they're actually used internally all along, until we actually print them to the screen, at which point they'll be gracefully degraded to 256-colors, then 16-colors, then finally monochrome, according to your terminal configuration (there's a small catch, check below).
 
 ```js
-import { style } from '@manaflair/term-strings';
+import { style } from 'term-strings';
 
 let prefix = style.emboldened.in + style.color.front(`#663399`).in;
 let suffix = style.emboldened.out + style.color.front.out;
@@ -87,7 +85,7 @@ Note that this variable is also used by a few other applications, so you might b
 From time to time, and especially when working while in raw mode (`process.stdin.setRawMode(true)`), your terminal might send you cryptic sequences to indicate that a particular key or mouse event occured. Efficiently parsing them yourself might be quite tricky, so Term-Strings ships with a dedicated parser to help you in this task:
 
 ```js
-import { Key, Mouse, parseTerminalInputs } from '@manaflair/term-strings/parse';
+import { Key, Mouse, parseTerminalInputs } from 'term-strings/parse';
 
 parseTerminalInputs(process.stdin).subscribe(input => {
     console.log(input); // A Node.js Buffer, or a Term-Strings Key or Mouse instance
@@ -96,7 +94,7 @@ parseTerminalInputs(process.stdin).subscribe(input => {
 
 ## License (MIT)
 
-> **Copyright © 2016 Manaflair**
+> **Copyright © 2016 Mael Nison**
 >
 > Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 >
