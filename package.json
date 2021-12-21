@@ -7,24 +7,36 @@
     "term-strings-seqdbg": "./build/bin/term-strings-seqdbg.js"
   },
   "scripts": {
-    "test": "mocha --require @babel/register $(find sources -name '*.test.js')",
-    "demo": "node -r @babel/register -- sources/bin/term-strings style.color.front.red.in -r 'Red Text' style.color.front.out -r ' and ' style.color.front.green.in -r 'Green Text' style.color.front.out -r '\n'",
-    "prepack": "babel -D -d build/ sources/"
+    "test": "mocha -r ts-node/register/transpile-only 'sources/**/*.test.*'",
+    "demo": "node -r ts-node/register/transpile-only -- sources/bin/term-strings style.color.front.red.in -r 'Red Text' style.color.front.out -r ' and ' style.color.front.green.in -r 'Green Text' style.color.front.out -r '\n'",
+    "prepack": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
     "color-diff": "^1.2.0",
-    "light-observable": "^2.13.1"
+    "ts-node": "^10.4.0",
+    "zen-observable": "^0.8.15"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.0",
     "@babel/core": "^7.16.5",
     "@babel/preset-env": "^7.16.5",
     "@babel/register": "^7.16.5",
+    "@types/chai": "^4.3.0",
+    "@types/color-diff": "^1.2.1",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^17.0.1",
+    "@types/zen-observable": "^0.8.3",
+    "@yarnpkg/eslint-config": "^0.5.0-rc.8",
     "chai": "^4.3.4",
-    "mocha": "^8"
+    "eslint": "^8.5.0",
+    "mocha": "^8",
+    "typescript": "^4.5.4"
   },
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "build"
+  ],
   "packageManager": "yarn@3.1.1"
 }
