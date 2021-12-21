@@ -5,14 +5,14 @@ export interface NodeConstructor<TIn, TSeq, TOut> {
 export class Node<TIn, TSeq, TOut> {
   private children = new Map<TIn, Array<Node<TIn, TSeq, TOut>>>();
 
-  constructor(private  activator: ((input: Array<TSeq>) => TOut) | null = null) {
+  constructor(private activator: ((input: Array<TSeq>) => TOut) | null = null) {
   }
 
   isActivable() {
     return this.activator !== null;
   }
 
-  setActivator(activator: typeof this.activator) {
+  setActivator(activator: ((input: Array<TSeq>) => TOut) | null) {
     this.activator = activator;
   }
 
