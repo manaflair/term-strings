@@ -1,4 +1,5 @@
 /build
 .yarn/*
+.pnp.*
 !.yarn/sdks
 node_modules
