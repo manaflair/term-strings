@@ -9,7 +9,7 @@ const EndSym = Symbol();
 export type End = typeof EndSym;
 
 export type Sequence = Array<string | number | Function>;
-export type Production = Cursor | Key | Mouse | Buffer;
+export type Production = Cursor | Key | Mouse | Uint8Array;
 export type Callback = (chars: Array<number>) => Production;
 
 export class Parser {
@@ -27,7 +27,7 @@ export class Parser {
 
   private ended = false;
 
-  private root = new Node<number | End, number, Production>(input => Buffer.from(input as Array<number>));
+  private root = new Node<number | End, number, Production>(input => new Uint8Array(input as Array<number>));
 
   private candidates: Array<Node<number | End, number, Production>> = [];
   private current = [this.root];
@@ -81,11 +81,11 @@ export class Parser {
     return this;
   }
 
-  public feed(stream: Array<number> | Buffer) {
+  public feed(stream: Array<number> | Uint8Array) {
     return this.feedImpl(stream);
   }
 
-  private feedImpl(stream: Buffer | (Array<number | End>)) {
+  private feedImpl(stream: Uint8Array | (Array<number | End>)) {
     if (this.ended)
       throw new Error(`Failed to execute 'feed': Cannot feed a closed parser.`);
 
@@ -96,7 +96,7 @@ export class Parser {
     };
 
     const sendBufferedInput = () => {
-      send(Buffer.from(this.bufferedInput));
+      send(new Uint8Array(this.bufferedInput));
       this.bufferedInput = [];
     };
 

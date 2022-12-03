@@ -70,7 +70,7 @@ describe(`parseTerminalInputs`, () => {
     await expect(inputSource).to.emit(value => {
       expect(value).to.be.instanceOf(Key).and.to.deep.equal(new Key(`escape`));
     }).then.emit(value => {
-      expect(value).to.be.instanceOf(Buffer).and.to.deep.equal(Buffer.from(`a`));
+      expect(value).to.be.instanceOf(Uint8Array).and.to.deep.equal(Buffer.from(`a`));
     }).then.complete();
   });
 
@@ -86,7 +86,7 @@ describe(`parseTerminalInputs`, () => {
     const inputSource = parseTerminalInputs(Observable.of(Buffer.from(`hello`)));
 
     await expect(inputSource).to.emit(value => {
-      expect(value).to.be.instanceOf(Buffer).and.to.deep.equal(Buffer.from(`hello`));
+      expect(value).to.be.instanceOf(Uint8Array).and.to.deep.equal(Buffer.from(`hello`));
     }).then.complete();
   });
 
@@ -94,7 +94,7 @@ describe(`parseTerminalInputs`, () => {
     const inputSource = parseTerminalInputs(Observable.of(Buffer.from(`hello\n`)));
 
     await expect(inputSource).to.emit(value => {
-      expect(value).to.be.instanceOf(Buffer).and.to.deep.equal(Buffer.from(`hello`));
+      expect(value).to.be.instanceOf(Uint8Array).and.to.deep.equal(Buffer.from(`hello`));
     }).then.emit(value => {
       expect(value).to.be.instanceOf(Key).and.to.deep.equal(new Key(`enter`));
     }).then.complete();
@@ -106,7 +106,7 @@ describe(`parseTerminalInputs`, () => {
     await expect(inputSource).to.emit(value => {
       expect(value).to.be.instanceOf(Key).and.to.deep.equal({name: `escape`, shift: false, alt: false, ctrl: false, meta: false});
     }).then.emit(value => {
-      expect(value).to.be.instanceOf(Buffer).and.to.deep.equal(Buffer.from(`O`));
+      expect(value).to.be.instanceOf(Uint8Array).and.to.deep.equal(Buffer.from(`O`));
     }).then.complete();
   });
 

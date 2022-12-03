@@ -6,12 +6,12 @@ import {Cursor}    from './types/Cursor';
 import {Key}       from './types/Key';
 import {Mouse}     from './types/Mouse';
 
-export function parseTerminalInputs(input: Observable<Array<number> | Buffer>, {throttleMouseMoveEvents = 0} = {}) {
+export function parseTerminalInputs(input: Observable<Array<number> | Uint8Array>, {throttleMouseMoveEvents = 0} = {}) {
   return new Observable<any>((observer: any) => {
     let pendingMouseMove: Mouse | null = null;
     let throttleTimer: ReturnType<typeof setTimeout> | null = null;
 
-    const send = (data: Mouse | Key | Cursor | Buffer) => {
+    const send = (data: Mouse | Key | Cursor | Uint8Array) => {
       if (throttleMouseMoveEvents > 0 && data instanceof Mouse && !data.start && !data.end) {
         pendingMouseMove = data;
 
