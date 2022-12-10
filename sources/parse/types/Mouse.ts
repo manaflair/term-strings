@@ -1,4 +1,6 @@
 export class Mouse {
+  public type = `mouse` as const;
+
   public name: string | null;
 
   public x: number;

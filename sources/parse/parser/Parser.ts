@@ -1,6 +1,8 @@
-import {Cursor}                from '../types/Cursor';
-import {Key}                   from '../types/Key';
-import {Mouse}                 from '../types/Mouse';
+import {Cursor} from '../types/Cursor';
+import {Data}   from '../types/Data';
+import {Info}   from '../types/Info';
+import {Key}    from '../types/Key';
+import {Mouse}  from '../types/Mouse';
 
 import {Node, NodeConstructor} from './Node';
 
@@ -9,7 +11,7 @@ const EndSym = Symbol();
 export type End = typeof EndSym;
 
 export type Sequence = Array<string | number | Function>;
-export type Production = Cursor | Key | Mouse | Uint8Array;
+export type Production = Cursor | Key | Mouse | Info | Data;
 export type Callback = (chars: Array<number>) => Production;
 
 export class Parser {
@@ -27,7 +29,10 @@ export class Parser {
 
   private ended = false;
 
-  private root = new Node<number | End, number, Production>(input => new Uint8Array(input as Array<number>));
+  private root = new Node<number | End, number, Production>(input => ({
+    type: `data`,
+    buffer: new Uint8Array(input as Array<number>),
+  }));
 
   private candidates: Array<Node<number | End, number, Production>> = [];
   private current = [this.root];
@@ -96,8 +101,13 @@ export class Parser {
     };
 
     const sendBufferedInput = () => {
-      send(new Uint8Array(this.bufferedInput));
+      const bufferedInput = this.bufferedInput;
       this.bufferedInput = [];
+
+      send({
+        type: `data`,
+        buffer: new Uint8Array(bufferedInput),
+      });
     };
 
     for (let t = 0; t < stream.length; ++t) {

@@ -1,4 +1,6 @@
 export class Key {
+  public type = `key` as const;
+
   public name: string;
 
   public alt: boolean;

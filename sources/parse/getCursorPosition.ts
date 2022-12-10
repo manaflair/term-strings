@@ -26,7 +26,7 @@ export async function getCursorPosition({stdin, stdout}: {stdin: Readable | Node
   return new Promise(resolve => {
     const subscription = parseTerminalInputs(streamToObservable(stdin)).subscribe({
       next: input => {
-        if (!(input instanceof Cursor))
+        if (input.type !== `cursor`)
           return;
 
         if (`setRawMode` in stdin)

@@ -1,9 +1,6 @@
-export class Cursor {
-  public x: number;
-  public y: number;
+export type Cursor = {
+  type: `cursor`;
 
-  constructor({x, y}: {x: number, y: number}) {
-    this.x = x;
-    this.y = y;
-  }
+  x: number;
+  y: number;
 }

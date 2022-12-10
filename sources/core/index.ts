@@ -1,11 +1,15 @@
-import {colorNames}                      from './data/colorNames.json';
-import {Target, getColor, getColorReset} from './tools/getColor';
+import {colorNames}                      from './data/colorNames.compiled.json';
+import {Target, getHexColorSequence, getNamedColorSequence, getColorResetSequence, getColorSequence, resolveColorToRgb} from './tools/getColor';
 
 export const feature = {
   enableMouseTracking: {in: `\x1b[?1000h`, out: `\x1b[?1000l`},
   enableMouseHoldTracking: {in: `\x1b[?1002h`, out: `\x1b[?1002l`},
   enableMouseMoveTracking: {in: `\x1b[?1003h`, out: `\x1b[?1003l`},
   enableExtendedCoordinates: {in: `\x1b[?1006h`, out: `\x1b[?1006l`},
+};
+
+export const request = {
+  screenBackgroundColor: `\x1b]11;?\x07`,
 };
 
 export const screen = {
@@ -47,24 +51,23 @@ export const cursor = {
 
 export type ColorName = keyof typeof colorNames;
 
-const frontMap = new Map(Object.entries(colorNames).map(([key, value]) => {
-  return [key, getColor(value, Target.Foreground)];
-}));
+const colorFront = (id: ColorName | string) => getColorSequence(id, Target.Foreground);
+colorFront.out = getColorResetSequence(Target.Foreground);
 
-const backMap = new Map(Object.entries(colorNames).map(([key, value]) => {
-  return [key, getColor(value, Target.Background)];
-}));
+const colorBack = (id: ColorName | string) => getColorSequence(id, Target.Background);
+colorBack.out = getColorResetSequence(Target.Background);
 
-const colorFront = (id: ColorName | string) => frontMap.get(id) ?? getColor(id, Target.Foreground);
-colorFront.out = getColorReset(Target.Foreground);
+const colorScreen = (id: ColorName | string) => {
+  const rgb = resolveColorToRgb(id);
+  return `\x1b]11;rgb:${rgb.R.toString(16)}/${rgb.G.toString(16)}/${rgb.B.toString(16)}\x07`;
+};
+colorBack.out = `\x1b]111\x07`;
 
-const colorBack = (id: ColorName | string) => backMap.get(id) ?? getColor(id, Target.Background);
-colorBack.out = getColorReset(Target.Background);
-
-for (const [key, color] of frontMap)
-  (colorFront as any)[key] = color;
-for (const [key, color] of backMap)
-  (colorBack as any)[key] = color;
+for (const color of Object.keys(colorNames)) {
+  (colorFront as any)[color] = colorFront(color);
+  (colorBack as any)[color] = colorBack(color);
+  (colorScreen as any)[color] = colorScreen(color);
+}
 
 export const style = {
   clear: `\x1b[m\x0f`,
@@ -79,10 +82,13 @@ export const style = {
 
   color: {
     front: colorFront as (typeof colorFront) & {
-      [key in ColorName]: ReturnType<typeof getColor>;
+      [key in ColorName]: string;
     },
     back: colorBack as (typeof colorBack) & {
-      [key in ColorName]: ReturnType<typeof getColor>;
+      [key in ColorName]: string;
+    },
+    screen: colorScreen as (typeof colorScreen) & {
+      [key in ColorName]: string;
     },
   },
 };

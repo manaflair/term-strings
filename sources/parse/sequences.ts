@@ -1,8 +1,10 @@
 /* eslint-disable no-control-regex */
 
+import {HexNode}            from './parser/HexNode';
 import {NumberNode}         from './parser/NumberNode';
 import {Sequence, Callback} from './parser/Parser';
 import {Cursor}             from './types/Cursor';
+import {Info}               from './types/Info';
 import {Key}                from './types/Key';
 import {Mouse}              from './types/Mouse';
 
@@ -40,12 +42,22 @@ const applyModifiers = (sequenceBuilder: (n: number) => string, name: string) =>
 
 const parseCursorSequence = (sequence: Array<number>) => {
   const [, y, x] = String.fromCharCode(...sequence).match(/^\x1b\[([0-9]+);([0-9]+)R$/)!;
-  return {x: Number(x) - 1, y: Number(y) - 1};
+  return {type: `cursor` as const, x: Number(x) - 1, y: Number(y) - 1};
 };
 
 const parseMouseSequence = (sequence: Array<number>) => {
   const [, x, y] = String.fromCharCode(...sequence).match(/^\x1b\[<[0-9]+;([0-9]+);([0-9]+)[Mm]$/)!;
   return {x: Number(x) - 1, y: Number(y) - 1};
+};
+
+const hex8 = (c: string) => {
+  return c.length === 2 ? c : c.length === 1 ? `${c}${c}` : c.slice(0, 2);
+};
+
+const extractXRgbColor = (sequence: Array<number>) => {
+  const [, r, g, b] = String.fromCharCode(...sequence).match(/rgb:([0-9a-f]+)\/([0-9a-f]+)\/([0-9a-f]+)/i)!;
+
+  return `#${hex8(r)}${hex8(g)}${hex8(b)}`;
 };
 
 const buildRegistrations = (definition: Record<string, Key | Mouse | Cursor>) => {
@@ -246,7 +258,9 @@ sequences = sequences.concat(buildRegistrations({
 
 sequences = sequences.concat([
 
-  [`\x1b[`, NumberNode, `;`, NumberNode, `R`, sequence => new Cursor(parseCursorSequence(sequence))],
+  [`\x1b]11;rgb:`, HexNode, `/`, HexNode, `/`, HexNode, `\x07`, sequence => ({type: `info`, name: `screenBackgroundColor`, color: extractXRgbColor(sequence)})],
+
+  [`\x1b[`, NumberNode, `;`, NumberNode, `R`, sequence => parseCursorSequence(sequence)],
 
   [`\x1b[`, NumberNode, `;5u`, sequence => new Key(String.fromCharCode(+String.fromCharCode(...sequence).match(/([0-9]+)/)![0]), {ctrl: true})],
   [`\x1b[`, NumberNode, `;6u`, sequence => new Key(String.fromCharCode(+String.fromCharCode(...sequence).match(/([0-9]+)/)![0]), {ctrl: true})],

@@ -2,7 +2,7 @@
 
 import Observable                 from 'zen-observable';
 
-import {feature}                  from '../core';
+import {feature, request}                  from '../core';
 import {Key, parseTerminalInputs} from '../parse';
 
 process.stdin.setRawMode(true);
@@ -28,8 +28,9 @@ parseTerminalInputs(new Observable(observer => {
   process.stdin.on(`close`, () => {
     observer.complete();
   });
-})).subscribe({
 
+  process.stdout.write(request.screenBackgroundColor);
+})).subscribe({
   next(data) {
     console.log(data);
 
@@ -37,7 +38,6 @@ parseTerminalInputs(new Observable(observer => {
       process.exit();
     }
   },
-
 });
 
 process.on(`exit`, () => {
