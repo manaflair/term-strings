@@ -1,5 +1,5 @@
-import {colorNames}                      from './data/colorNames.compiled.json';
-import {Target, getHexColorSequence, getNamedColorSequence, getColorResetSequence, getColorSequence, resolveColorToRgb} from './tools/getColor';
+import {colorNames}                                                         from './data/colorNames.compiled.json';
+import {Target, getColorResetSequence, getColorSequence, resolveColorToRgb} from './tools/getColor';
 
 export const feature = {
   enableMouseTracking: {in: `\x1b[?1000h`, out: `\x1b[?1000l`},
