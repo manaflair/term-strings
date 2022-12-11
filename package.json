@@ -1,6 +1,7 @@
 {
   "name": "term-strings",
   "version": "0.14.1",
+  "packageManager": "yarn@4.0.0-rc.31",
   "license": "MIT",
   "main": "build/core/index.js",
   "types": "build/core/index.d.ts",
@@ -46,6 +47,5 @@
   },
   "files": [
     "build"
-  ],
-  "packageManager": "yarn@4.0.0-rc.31"
+  ]
 }
