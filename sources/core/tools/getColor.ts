@@ -23,12 +23,16 @@ export type RGB = {
   B: number;
 };
 
+const hexShortExp = /^#([0-9a-f])([0-9a-f])([0-9a-f])$/i;
 const hexRegExp = /^#([0-9a-f]{6})$/i;
 
 export function hexToRgb(hex: string): RGB {
-  const match = hex.match(hexRegExp);
+  const match = hex
+    .replace(hexShortExp, `#$1$1$2$2$3$3`)
+    .match(hexRegExp);
+
   if (!match)
-    throw new Error(`Invalid color`);
+    throw new Error(`Invalid color (${hex})`);
 
   const color = parseInt(match[1], 16);
 
