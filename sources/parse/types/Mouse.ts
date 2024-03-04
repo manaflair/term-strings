@@ -2,6 +2,7 @@ export class Mouse {
   public type = `mouse` as const;
 
   public name: string | null;
+  public sequence: string;
 
   public x: number;
   public y: number;
@@ -13,7 +14,7 @@ export class Mouse {
   public alt: boolean;
   public ctrl: boolean;
 
-  constructor(name: string | null, {
+  constructor(name: string | null, sequence: string, {
     x = 0,
     y = 0,
     d = 0,
@@ -33,8 +34,9 @@ export class Mouse {
 
     alt?: boolean;
     ctrl?: boolean;
-  } = {}) {
+  }) {
     this.name = name;
+    this.sequence = sequence;
 
     this.x = x;
     this.y = y;

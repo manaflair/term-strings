@@ -15,8 +15,8 @@ const nameDataFile = require(nameDataPath);
 function getClosestColor(color: RGB, target: Array<RGB>) {
   return target.indexOf(closestColor(color, target));
 }
-  
-for (const name of Object.keys(nameDataFile.colorNames) as any[]) {
+
+for (const name of Object.keys(nameDataFile.colorNames) as Array<any>) {
   const hex = nameDataFile.colorNames[name];
   const rgb = hexToRgb(hex);
 

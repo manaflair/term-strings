@@ -2,7 +2,7 @@
 
 import Observable                 from 'zen-observable';
 
-import {feature, request}                  from '../core';
+import {feature, request}         from '../core';
 import {Key, parseTerminalInputs} from '../parse';
 
 process.stdin.setRawMode(true);

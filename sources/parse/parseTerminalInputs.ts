@@ -2,8 +2,6 @@ import Observable           from 'zen-observable';
 
 import {Parser, Production} from './parser/Parser';
 import {sequences}          from './sequences';
-import {Cursor}             from './types/Cursor';
-import {Key}                from './types/Key';
 import {Mouse}              from './types/Mouse';
 
 export function parseTerminalInputs(input: Observable<Array<number> | Uint8Array>, {throttleMouseMoveEvents = 0} = {}) {

@@ -4,7 +4,6 @@ import Observable            from 'zen-observable';
 import {cursor}              from '../core';
 
 import {parseTerminalInputs} from './parseTerminalInputs';
-import {Cursor}              from './types/Cursor';
 
 function streamToObservable(stream: Readable) {
   return new Observable<Buffer>(observer => {

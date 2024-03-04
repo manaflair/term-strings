@@ -27,7 +27,7 @@ for (const arg of process.argv.slice(2)) {
 
     if (typeof target === `function` && part.match(/^#([0-9a-f]{3}|[0-9a-f]{6)$/i)) {
       target = target(part);
-    } else if (Object.prototype.hasOwnProperty.call(target, part)) {
+    } else if (Object.hasOwn(target, part)) {
       target = target[part];
     } else {
       target = undefined;

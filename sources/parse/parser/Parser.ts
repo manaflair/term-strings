@@ -1,8 +1,8 @@
-import {Cursor} from '../types/Cursor';
-import {Data}   from '../types/Data';
-import {Info}   from '../types/Info';
-import {Key}    from '../types/Key';
-import {Mouse}  from '../types/Mouse';
+import {Cursor}                from '../types/Cursor';
+import {Data}                  from '../types/Data';
+import {Info}                  from '../types/Info';
+import {Key}                   from '../types/Key';
+import {Mouse}                 from '../types/Mouse';
 
 import {Node, NodeConstructor} from './Node';
 

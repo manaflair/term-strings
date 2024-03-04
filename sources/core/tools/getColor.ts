@@ -1,5 +1,4 @@
 import {closest as closestColor} from 'color-diff';
-import { cp } from 'fs';
 
 import {colorNames}              from '../data/colorNames.compiled.json';
 import {palette16, palette256}   from '../data/colorPalettes.compiled.json';
@@ -101,13 +100,13 @@ export const getNamedColorSequence = doesSupportTrueColors
       : () => ``;
 
 export function resolveColorToRgb(color: ColorName | string) {
-  return Object.prototype.hasOwnProperty.call(colorNames, color)
+  return Object.hasOwn(colorNames, color)
     ? colorNames[color as ColorName].rgb
     : hexToRgbMemo(color);
 }
 
 export function getColorSequence(color: ColorName | string, target: Target) {
-  return Object.prototype.hasOwnProperty.call(colorNames, color)
+  return Object.hasOwn(colorNames, color)
     ? getNamedColorSequence(color as ColorName, target)
     : getHexColorSequence(color, target);
 }
