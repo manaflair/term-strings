@@ -19,3 +19,9 @@ if (process.env.COLORTERM) {
     doesSupportTrueColors = true;
   }
 }
+
+if (`navigator` in globalThis) {
+  doesSupport16Colors = true;
+  doesSupport256Colors = true;
+  doesSupportTrueColors = true;
+}
