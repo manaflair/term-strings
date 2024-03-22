@@ -95,7 +95,7 @@ export class Parser {
       throw new Error(`Failed to execute 'feed': Cannot feed a closed parser.`);
 
     const send = (production: Production) => {
-      setImmediate(() => {
+      Promise.resolve().then(() => {
         this.callback(production);
       });
     };

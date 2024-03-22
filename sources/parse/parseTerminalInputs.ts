@@ -45,7 +45,7 @@ export function parseTerminalInputs(input: Observable<Array<number> | Uint8Array
       complete() {
         parser.end();
 
-        setImmediate(() => {
+        Promise.resolve().then(() => {
           observer.complete();
         });
       },

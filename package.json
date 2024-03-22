@@ -1,6 +1,6 @@
 {
   "name": "term-strings",
-  "version": "0.15.0",
+  "version": "0.15.1",
   "packageManager": "yarn@4.1.0+sha224.bc24d7f5afc738464f3d4e95f4e6e7829a35cee54a0fd527ea5baa83",
   "license": "MIT",
   "main": "build/core/index.js",
