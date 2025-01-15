@@ -1,6 +1,8 @@
 import {colorNames}                                                         from './data/colorNames.compiled.json';
 import {Target, getColorResetSequence, getColorSequence, resolveColorToRgb} from './tools/getColor';
 
+export {ansiPattern} from './tools/ansiPattern';
+
 export const feature = {
   enableMouseTracking: {in: `\x1b[?1000h`, out: `\x1b[?1000l`},
   enableMouseHoldTracking: {in: `\x1b[?1002h`, out: `\x1b[?1002l`},
