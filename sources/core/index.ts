@@ -76,7 +76,7 @@ export const style = {
 
   emboldened: {in: `\x1b[1m`, out: `\x1b[22m`},
   fainted: {in: `\x1b[2m`, out: `\x1b[22m`},
-  italic: {in: `\x1b[3m`, out: `\x1b[23m`},
+  italicized: {in: `\x1b[3m`, out: `\x1b[23m`},
   underlined: {in: `\x1b[4m`, out: `\x1b[24m`},
   inversed: {in: `\x1b[7m`, out: `\x1b[27m`},
   hidden: {in: `\x1b[8m`, out: `\x1b[28m`},

@@ -259,6 +259,58 @@ sequences = sequences.concat(buildRegistrations({
 
 }));
 
+const modifierCombinations: Array<{
+  code: number;
+  alt: boolean;
+  ctrl: boolean;
+  shift: boolean;
+}> = [];
+
+for (const alt of [false, true]) {
+  for (const ctrl of [false, true]) {
+    for (const shift of [false, true]) {
+      modifierCombinations.push({
+        code: (alt ? 1 << 3 : 0) | (ctrl ? 1 << 4 : 0) | (shift ? 1 << 2 : 0),
+        alt,
+        ctrl,
+        shift,
+      });
+    }
+  }
+}
+
+for (const [index, button] of [`left`, `middle`, `right`].entries()) {
+  for (const {code, alt, ctrl, shift} of modifierCombinations) {
+    const finalCode = index | code;
+
+    sequences.push([`\x1b[<${finalCode};`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(button, stringifySequence(sequence), {alt, ctrl, shift, start: true})]);
+    sequences.push([`\x1b[<${finalCode};`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(button, stringifySequence(sequence), {alt, ctrl, shift, end: true})]);
+  }
+}
+
+for (const {code, alt, ctrl, shift} of modifierCombinations) {
+  const finalCode = code + 35;
+
+  sequences.push([`\x1b[<${finalCode};`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(null, stringifySequence(sequence), {...parseMouseSequence(sequence), alt, ctrl, shift})]);
+  sequences.push([`\x1b[<${finalCode};`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(null, stringifySequence(sequence), {...parseMouseSequence(sequence), alt, ctrl, shift})]);
+}
+
+for (const {code, alt, ctrl, shift} of modifierCombinations) {
+  const finalCode = 64 + code;
+
+  sequences.push([`\x1b[<${finalCode + 0};`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, d: -1, alt, ctrl, shift})]);
+  sequences.push([`\x1b[<${finalCode + 0};`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, d: -1, alt, ctrl, shift})]);
+
+  sequences.push([`\x1b[<${finalCode + 1};`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, d: +1, alt, ctrl, shift})]);
+  sequences.push([`\x1b[<${finalCode + 1};`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, d: +1, alt, ctrl, shift})]);
+
+  sequences.push([`\x1b[<${finalCode + 2};`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, dx: -1, alt, ctrl, shift})]);
+  sequences.push([`\x1b[<${finalCode + 2};`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, dx: -1, alt, ctrl, shift})]);
+
+  sequences.push([`\x1b[<${finalCode + 3};`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, dx: +1, alt, ctrl, shift})]);
+  sequences.push([`\x1b[<${finalCode + 3};`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, dx: +1, alt, ctrl, shift})]);
+}
+
 sequences = sequences.concat([
 
   [`\x1b]11;rgb:`, HexNode, `/`, HexNode, `/`, HexNode, `\x07`, (sequence): Info => ({type: `info`, name: `screenBackgroundColor`, color: extractXRgbColor(sequence)})],
@@ -267,68 +319,5 @@ sequences = sequences.concat([
 
   [`\x1b[`, NumberNode, `;5u`, sequence => new Key(String.fromCharCode(+String.fromCharCode(...sequence).match(/([0-9]+)/)![0]), stringifySequence(sequence), {ctrl: true})],
   [`\x1b[`, NumberNode, `;6u`, sequence => new Key(String.fromCharCode(+String.fromCharCode(...sequence).match(/([0-9]+)/)![0]), stringifySequence(sequence), {ctrl: true})],
-
-  [`\x1b[<0;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`left`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true})],
-  [`\x1b[<0;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`left`, stringifySequence(sequence), {...parseMouseSequence(sequence), end: true})],
-
-  [`\x1b[<1;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`middle`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true})],
-  [`\x1b[<1;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`middle`, stringifySequence(sequence), {...parseMouseSequence(sequence), end: true})],
-
-  [`\x1b[<2;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`right`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true})],
-  [`\x1b[<2;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`right`, stringifySequence(sequence), {...parseMouseSequence(sequence), end: true})],
-
-  [`\x1b[<8;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`left`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, alt: true})],
-  [`\x1b[<8;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`left`, stringifySequence(sequence), {...parseMouseSequence(sequence), end: true, alt: true})],
-
-  [`\x1b[<9;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`middle`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, alt: true})],
-  [`\x1b[<9;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`middle`, stringifySequence(sequence), {...parseMouseSequence(sequence), end: true, alt: true})],
-
-  [`\x1b[<10;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`right`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, alt: true})],
-  [`\x1b[<10;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`right`, stringifySequence(sequence), {...parseMouseSequence(sequence), end: true, alt: true})],
-
-  [`\x1b[<16;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`left`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, ctrl: true})],
-  [`\x1b[<16;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`left`, stringifySequence(sequence), {...parseMouseSequence(sequence), end: true, ctrl: true})],
-
-  [`\x1b[<17;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`middle`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, ctrl: true})],
-  [`\x1b[<17;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`middle`, stringifySequence(sequence), {...parseMouseSequence(sequence), end: true, ctrl: true})],
-
-  [`\x1b[<18;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`right`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, ctrl: true})],
-  [`\x1b[<18;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`right`, stringifySequence(sequence), {...parseMouseSequence(sequence), end: true, ctrl: true})],
-
-  [`\x1b[<32;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`left`, stringifySequence(sequence), {...parseMouseSequence(sequence)})],
-  [`\x1b[<32;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`left`, stringifySequence(sequence), {...parseMouseSequence(sequence)})],
-
-  [`\x1b[<33;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`middle`, stringifySequence(sequence), {...parseMouseSequence(sequence)})],
-  [`\x1b[<33;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`middle`, stringifySequence(sequence), {...parseMouseSequence(sequence)})],
-
-  [`\x1b[<34;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`right`, stringifySequence(sequence), {...parseMouseSequence(sequence)})],
-  [`\x1b[<34;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`right`, stringifySequence(sequence), {...parseMouseSequence(sequence)})],
-
-  [`\x1b[<35;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(null, stringifySequence(sequence), {...parseMouseSequence(sequence)})],
-  [`\x1b[<35;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(null, stringifySequence(sequence), {...parseMouseSequence(sequence)})],
-
-  [`\x1b[<43;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(null, stringifySequence(sequence), {...parseMouseSequence(sequence), alt: true})],
-  [`\x1b[<43;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(null, stringifySequence(sequence), {...parseMouseSequence(sequence), alt: true})],
-
-  [`\x1b[<51;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(null, stringifySequence(sequence), {...parseMouseSequence(sequence), ctrl: true})],
-  [`\x1b[<51;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(null, stringifySequence(sequence), {...parseMouseSequence(sequence), ctrl: true})],
-
-  [`\x1b[<64;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, d: -1})],
-  [`\x1b[<64;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, d: -1})],
-
-  [`\x1b[<65;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, d: +1})],
-  [`\x1b[<65;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, d: +1})],
-
-  [`\x1b[<72;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, d: -1, alt: true})],
-  [`\x1b[<72;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, d: -1, alt: true})],
-
-  [`\x1b[<73;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, d: +1, alt: true})],
-  [`\x1b[<73;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, d: +1, alt: true})],
-
-  [`\x1b[<80;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, d: -1, ctrl: true})],
-  [`\x1b[<80;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, d: -1, ctrl: true})],
-
-  [`\x1b[<81;`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, d: +1, ctrl: true})],
-  [`\x1b[<81;`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(`wheel`, stringifySequence(sequence), {...parseMouseSequence(sequence), start: true, end: true, d: +1, ctrl: true})],
 
 ]);

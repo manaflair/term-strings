@@ -45,5 +45,6 @@ process.on(`exit`, () => {
 
   process.stdout.write(feature.enableExtendedCoordinates.out);
   process.stdout.write(feature.enableMouseHoldTracking.out);
+  process.stdout.write(feature.enableMouseMoveTracking.out);
   process.stdout.write(feature.enableMouseTracking.out);
 });
