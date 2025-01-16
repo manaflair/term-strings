@@ -283,13 +283,22 @@ for (const [index, button] of [`left`, `middle`, `right`].entries()) {
   for (const {code, alt, ctrl, shift} of modifierCombinations) {
     const finalCode = index | code;
 
-    sequences.push([`\x1b[<${finalCode};`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(button, stringifySequence(sequence), {alt, ctrl, shift, start: true})]);
-    sequences.push([`\x1b[<${finalCode};`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(button, stringifySequence(sequence), {alt, ctrl, shift, end: true})]);
+    sequences.push([`\x1b[<${finalCode};`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(button, stringifySequence(sequence), {...parseMouseSequence(sequence), alt, ctrl, shift, start: true})]);
+    sequences.push([`\x1b[<${finalCode};`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(button, stringifySequence(sequence), {...parseMouseSequence(sequence), alt, ctrl, shift, end: true})]);
+  }
+}
+
+for (const [index, button] of [`left`, `middle`, `right`].entries()) {
+  for (const {code, alt, ctrl, shift} of modifierCombinations) {
+    const finalCode = 32 + (index | code);
+
+    sequences.push([`\x1b[<${finalCode};`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(button, stringifySequence(sequence), {...parseMouseSequence(sequence), alt, ctrl, shift, start: true})]);
+    sequences.push([`\x1b[<${finalCode};`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(button, stringifySequence(sequence), {...parseMouseSequence(sequence), alt, ctrl, shift, end: true})]);
   }
 }
 
 for (const {code, alt, ctrl, shift} of modifierCombinations) {
-  const finalCode = code + 35;
+  const finalCode = 35 + code;
 
   sequences.push([`\x1b[<${finalCode};`, NumberNode, `;`, NumberNode, `M`, sequence => new Mouse(null, stringifySequence(sequence), {...parseMouseSequence(sequence), alt, ctrl, shift})]);
   sequences.push([`\x1b[<${finalCode};`, NumberNode, `;`, NumberNode, `m`, sequence => new Mouse(null, stringifySequence(sequence), {...parseMouseSequence(sequence), alt, ctrl, shift})]);
